@@ -72,16 +72,28 @@ end
 
 boardstate = Array.new(3) { Array.new(3) { '-' } }
 current_player = 'X'
+game_over = false
 
 loop do
   boardstate = accept_input(current_player, boardstate)
   display_board(boardstate)
+
   if assess_victory(boardstate)
     puts "Player #{current_player} is victorious!"
-    break
+    game_over = true
   elsif !boardstate.flatten.include?('-')
     puts 'No moves remain! It was a tie!'
-    break
+    game_over = true
+  end
+
+  if game_over
+    puts 'Would you like to play again? Y/N>>'
+    break unless gets.chomp.downcase == 'y'
+
+    boardstate = Array.new(3) { Array.new(3) { '-' } }
+    current_player = 'O' #This will flip to 'X'
+    display_board(boardstate)
+    game_over = false
   end
 
   current_player = current_player == 'X' ? 'O' : 'X'
