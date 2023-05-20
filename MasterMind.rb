@@ -14,6 +14,34 @@
 
 COLOR_LIST = ['R', 'G', 'O', 'Y', 'P', 'B']
 MAX_TURNS = 12
+RESET_COLOR = "\e[0m"
+RED = "\e[38;2;255;0;0m"
+GREEN = "\e[1m\e[32m"
+YELLOW = "\e[1m\e[33m"
+BLUE = "\e[1m\e[34m"
+ORANGE = "\e[38;2;255;150;27m"
+PURPLE = "\e[1m\e[35m"
+
+def color_code(original_code)
+  colored_code = ""
+  original_code.split('').each do |char|
+    case char
+    when 'R'
+      colored_code += "#{RED}R#{RESET_COLOR}"
+    when 'G'
+      colored_code += "#{GREEN}G#{RESET_COLOR}"
+    when 'O'
+      colored_code += "#{ORANGE}O#{RESET_COLOR}"
+    when 'Y'
+      colored_code += "#{YELLOW}Y#{RESET_COLOR}"
+    when 'P'
+      colored_code += "#{PURPLE}P#{RESET_COLOR}"
+    when 'B'
+      colored_code += "#{BLUE}B#{RESET_COLOR}"
+    end
+  end
+  colored_code
+end
 
 def generate_random_code
   code = ''
@@ -158,20 +186,20 @@ def player_as_codebreaker_game
     turn_count += 1
 
     if guess_eval[0] == 4
-      puts "Congratulations code-breaker, you guessed the code in #{turn_count} turns!"
+      puts "Congratulations code-breaker, you guessed #{color_code(ai_code)} in #{turn_count} turns!"
       return turn_count
     elsif turn_count == MAX_TURNS
       puts "Oh no code-breaker, you have failed to guess #{ai_code} in #{MAX_TURNS} turns! Game over."
       return turn_count + 1 # bonus point for never getting code
     else
-      puts "Your guess had #{guess_eval[0]} perfect matches and #{guess_eval[1]} imperfect matches."
+      puts "#{color_code(player_guess)} had #{guess_eval[0]} perfect matches and #{guess_eval[1]} imperfect matches.\n\n"
     end
   end
 end
 
 def ai_as_codebreaker_game
   player_code = accept_player_input("Input secret code in form 'RGBY' (choosing from #{COLOR_LIST})>>", 'RGBY', COLOR_LIST)
-  puts "Confirmed, your secret code is #{player_code}."
+  puts "Confirmed, your secret code is #{color_code(player_code)}."
   valid_combinations = ai_generate_all_combinations
   guess_num = 1
   guess = ''
@@ -179,7 +207,7 @@ def ai_as_codebreaker_game
   loop do
     guess = ai_make_guess(guess, valid_combinations)
     feedback = evaluate_guess(guess, player_code)
-    puts "Guess ##{guess_num}: #{guess} had #{feedback[0]} perfect matches and #{feedback[1]} imperfect matches."
+    puts "Guess ##{guess_num}: #{color_code(guess)} had #{feedback[0]} perfect matches and #{feedback[1]} imperfect matches."
 
     if feedback[0] == 4
       puts "AI was able to guess your code in #{guess_num} turns!"
@@ -204,11 +232,11 @@ def initialize_game
   loop do
     mode = accept_player_input('For this round, do you want to play as CodeBreaker or CodeMaker? (B or M)>>', 'B', ['B','M'])
     if mode.upcase == 'M'
-      puts 'Okay CodeMaker it is! Let us begin!'
+      puts "Okay CodeMaker it is! Let us begin!\n\n"
       player_games += 1
       player_score += ai_as_codebreaker_game
     else
-      puts 'Okay CodeBreaker it is! Let us begin!'
+      puts "Okay CodeBreaker it is! Let us begin!\n\n"
       ai_games += 1
       ai_score += player_as_codebreaker_game
     end
