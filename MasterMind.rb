@@ -12,13 +12,13 @@
 # GameLoop: Provide feedback "You have X precise guesses and Y correct colors in the wrong slots"
 # GameLoop: Guess again
 
-VALID_INPUTS = ['R', 'G', 'O', 'Y', 'P', 'B']
+COLOR_LIST = ['R', 'G', 'O', 'Y', 'P', 'B']
 MAX_TURNS = 12
 
 def generate_random_code
   code = ''
   4.times do
-    code += VALID_INPUTS[rand(6)]
+    code += COLOR_LIST[rand(6)]
   end
 
   code
@@ -52,10 +52,10 @@ def evaluate_guess(guess, code)
   [perfect_guesses, imperfect_guesses]
 end
 
-def valid_code_input?(inputstr)
+def valid_player_input?(inputstr, valid_inputs)
   inputstr.split('').each do |item|
-    unless VALID_INPUTS.include?(item)
-      puts "Error! Only acceptable colors are #{VALID_INPUTS}" 
+    unless valid_inputs.include?(item)
+      puts "Error! Only acceptable inputs are #{valid_inputs}"
       return false
     end
   end
@@ -63,16 +63,17 @@ def valid_code_input?(inputstr)
   true
 end
 
-def accept_player_code
+def accept_player_input(prompt_string, example_input, valid_inputs)
   loop do
-    puts "Input code in form 'RGBY' (choosing from #{VALID_INPUTS})>>"
+    # puts "Input code in form 'RGBY' (choosing from #{VALID_INPUTS})>>"
+    puts prompt_string
     input_string = gets.chomp
-    if input_string.length != 4
-      puts "Error! Input must be of form 'RGBY' exactly 4 characters long."
+    if input_string.length != example_input.length
+      puts "Error! Input must be of form #{example_input} exactly #{example_input.length} characters long."
       next
     end
 
-    next unless valid_code_input?(input_string)
+    next unless valid_player_input?(input_string, valid_inputs)
 
     return input_string
   end
@@ -80,10 +81,10 @@ end
 
 def AI_generate_all_combinations
   combinations = []
-  VALID_INPUTS.each do |char1|
-    VALID_INPUTS.each do |char2|
-      VALID_INPUTS.each do |char3|
-        VALID_INPUTS.each do |char4|
+  COLOR_LIST.each do |char1|
+    COLOR_LIST.each do |char2|
+      COLOR_LIST.each do |char3|
+        COLOR_LIST.each do |char4|
           combinations << "#{char1}#{char2}#{char3}#{char4}"
         end
       end
@@ -137,14 +138,12 @@ end
 
 def AI_make_guess(previous_guess, current_combinations)
   if previous_guess == ''
-    firstChar = VALID_INPUTS[rand(6)]
-    secondChar = VALID_INPUTS[rand(6)]
+    first_char = COLOR_LIST[rand(6)]
+    second_char = COLOR_LIST[rand(6)]
 
-    while firstChar == secondChar
-      secondChar = valid_code_input?[rand(6)]
-    end
+    second_char = COLOR_LIST[rand(6)] while first_char == second_char
 
-    return "#{firstChar}#{firstChar}#{secondChar}#{secondChar}"
+    return "#{first_char}#{first_char}#{second_char}#{second_char}"
   end
 
   return current_combinations[rand(current_combinations.size)]
@@ -154,7 +153,7 @@ def player_as_codebreaker_game
   ai_code = generate_random_code
   turn_count = 0
   loop do
-    player_guess = accept_player_code
+    player_guess = accept_player_input("Input guess in form 'RGBY' (choosing from #{COLOR_LIST})>>", 'RGBY', COLOR_LIST)
     guess_eval = evaluate_guess(player_guess, ai_code)
     turn_count += 1
 
@@ -171,7 +170,7 @@ def player_as_codebreaker_game
 end
 
 def AI_as_codebreaker_game
-  player_code = accept_player_code
+  player_code = accept_player_input("Input code in form 'RGBY' (choosing from #{COLOR_LIST})>>", 'RGBY', COLOR_LIST)
   puts "Confirmed, your secret code is #{player_code}."
   valid_combinations = AI_generate_all_combinations()
   guess_num = 1
@@ -197,4 +196,5 @@ def AI_as_codebreaker_game
 end
 # rubocop:enable Metrics/MethodLength
 
-AI_as_codebreaker_game()
+#AI_as_codebreaker_game()
+player_as_codebreaker_game()
