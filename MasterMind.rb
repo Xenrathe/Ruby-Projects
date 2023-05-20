@@ -54,7 +54,7 @@ end
 
 def valid_player_input?(inputstr, valid_inputs)
   inputstr.split('').each do |item|
-    unless valid_inputs.include?(item)
+    unless valid_inputs.any?{ |element| element.downcase == item.downcase }
       puts "Error! Only acceptable inputs are #{valid_inputs}"
       return false
     end
@@ -79,7 +79,7 @@ def accept_player_input(prompt_string, example_input, valid_inputs)
   end
 end
 
-def AI_generate_all_combinations
+def ai_generate_all_combinations
   combinations = []
   COLOR_LIST.each do |char1|
     COLOR_LIST.each do |char2|
@@ -94,7 +94,7 @@ def AI_generate_all_combinations
   combinations
 end
 
-def AI_reduce_combinations_from_result(previous_guess, previous_feedback, current_combinations)
+def ai_reduce_combinations_from_result(previous_guess, previous_feedback, current_combinations)
   perfect_guesses = previous_feedback[0]
   imperfect_guesses = previous_feedback[1]
   new_combinations = []
@@ -136,7 +136,7 @@ def AI_reduce_combinations_from_result(previous_guess, previous_feedback, curren
   matching_combinations
 end
 
-def AI_make_guess(previous_guess, current_combinations)
+def ai_make_guess(previous_guess, current_combinations)
   if previous_guess == ''
     first_char = COLOR_LIST[rand(6)]
     second_char = COLOR_LIST[rand(6)]
@@ -161,23 +161,23 @@ def player_as_codebreaker_game
       puts "Congratulations code-breaker, you guessed the code in #{turn_count} turns!"
       return turn_count
     elsif turn_count == MAX_TURNS
-      puts "Oh no code-breaker, you have failed to guess the code in #{MAX_TURNS} turns! Game over."
-      return turn_count
+      puts "Oh no code-breaker, you have failed to guess #{ai_code} in #{MAX_TURNS} turns! Game over."
+      return turn_count + 1 # bonus point for never getting code
     else
       puts "Your guess had #{guess_eval[0]} perfect matches and #{guess_eval[1]} imperfect matches."
     end
   end
 end
 
-def AI_as_codebreaker_game
-  player_code = accept_player_input("Input code in form 'RGBY' (choosing from #{COLOR_LIST})>>", 'RGBY', COLOR_LIST)
+def ai_as_codebreaker_game
+  player_code = accept_player_input("Input secret code in form 'RGBY' (choosing from #{COLOR_LIST})>>", 'RGBY', COLOR_LIST)
   puts "Confirmed, your secret code is #{player_code}."
-  valid_combinations = AI_generate_all_combinations()
+  valid_combinations = ai_generate_all_combinations
   guess_num = 1
   guess = ''
 
   loop do
-    guess = AI_make_guess(guess, valid_combinations)
+    guess = ai_make_guess(guess, valid_combinations)
     feedback = evaluate_guess(guess, player_code)
     puts "Guess ##{guess_num}: #{guess} had #{feedback[0]} perfect matches and #{feedback[1]} imperfect matches."
 
@@ -186,15 +186,39 @@ def AI_as_codebreaker_game
       return guess_num
     elsif guess_num == MAX_TURNS
       puts 'Congrulations! The AI was unable to guess your code before turns ran out.'
-      return guess_num
+      return guess_num + 1 # Bonus point for unguessable code
     else
       guess_num += 1
-      valid_combinations = AI_reduce_combinations_from_result(guess, feedback, valid_combinations)
+      valid_combinations = ai_reduce_combinations_from_result(guess, feedback, valid_combinations)
       sleep(1)
     end
   end
 end
+
+def initialize_game
+  player_score = 0
+  player_games = 0
+  ai_score = 0
+  ai_games = 0
+
+  loop do
+    mode = accept_player_input('For this round, do you want to play as CodeBreaker or CodeMaker? (B or M)>>', 'B', ['B','M'])
+    if mode.upcase == 'M'
+      puts 'Okay CodeMaker it is! Let us begin!'
+      player_games += 1
+      player_score += ai_as_codebreaker_game
+    else
+      puts 'Okay CodeBreaker it is! Let us begin!'
+      ai_games += 1
+      ai_score += player_as_codebreaker_game
+    end
+
+    puts "\n***CURRENT SCORE***"
+    puts "PLAYER: #{player_score} in #{player_games} games"
+    puts "AI: #{ai_score} in #{ai_games} games\n\n"
+    break if accept_player_input('Do you want to play again? Y/N>>', 'Y', ['Y', 'N']).upcase == 'N'
+  end
+end
 # rubocop:enable Metrics/MethodLength
 
-#AI_as_codebreaker_game()
-player_as_codebreaker_game()
+initialize_game
