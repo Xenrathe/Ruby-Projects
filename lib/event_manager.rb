@@ -1,6 +1,7 @@
 require 'csv'
 require 'google/apis/civicinfo_v2'
 require 'erb'
+require 'time'
 
 def clean_zipcode(zipcode)
   zipcode.to_s.rjust(5, '0')[0..4]
@@ -16,6 +17,23 @@ def clean_phone_num(phone_num)
     phone_num = phone_num.to_s.rjust(10,'5')[0..9]
     [3, 7].each { |i| phone_num.insert(i, '-') }
     phone_num
+  end
+end
+
+def get_hour(date_time)
+  # time = date_time.split(' ')[1]
+  Time.strptime(date_time, "%m/%d/%y %H:%M").hour
+end
+
+def most_popular_hour(hour_frequency)
+  hour_frequency = hour_frequency.sort_by { |hr, freq| -freq }
+  hour_frequency = hour_frequency.select { |item| item[1] == hour_frequency[0][1] }
+  hour_frequency.map do |item|
+    if item[0] < 13
+      "#{item[0]} am"
+    else
+      "#{item[0] - 12} pm"
+    end
   end
 end
 
@@ -55,16 +73,21 @@ contents = CSV.open(
   header_converters: :symbol
 )
 
+hours = Hash.new(0)
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
   zipcode = clean_zipcode(row[:zipcode])
   legislators = legislators_by_zipcode(zipcode)
   phone_num = clean_phone_num(row[:homephone])
+  hour = get_hour(row[:regdate])
+  hours[hour] += 1
 
-  puts "Name: #{name}. Number: #{phone_num}"
+  #puts "Name: #{name}. Hour: #{hour}"
 
   form_letter = erb_template.result(binding)
 
   #save_thank_you_letter(id, form_letter)
 end
+
+puts "The most popular hour(s) are: #{most_popular_hour(hours)}"
