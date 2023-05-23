@@ -115,7 +115,7 @@ def play_round
   end
 
   loop do
-    input_string = accept_guess_input("Input guess-word, letter, or 'save'>>", hidden_word, letter_guesses)
+    input_string = accept_guess_input("Input guess-word, letter, or 'save'>>", hidden_word, letter_guesses).downcase
 
     if input_string.length == 1
       letter_guesses.push(input_string)
