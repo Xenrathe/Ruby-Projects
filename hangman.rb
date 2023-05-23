@@ -27,7 +27,7 @@ def valid_guess_input?(input_string, hidden_word, letter_guesses)
     else
       true
     end
-  elsif input_string.length != hidden_word.length
+  elsif input_string.length != hidden_word.length && input_string.downcase != 'save'
     puts "Error! Word guesses must be of length #{hidden_word.length}"
     false
   else
@@ -58,7 +58,7 @@ end
 def letter_guess_feedback(letter_guess, letter_guesses, hidden_word, wrong_guesses)
   if hidden_word.include?(letter_guess)
     puts "\n#{GREEN}Correct guess!#{RESET_COLOR}"
-  else
+  elsif letter_guess != '0'
     puts "\n#{ORANGE}Incorrect guess!#{RESET_COLOR}"
   end
 
@@ -80,17 +80,51 @@ def draw_hangman(wrong_guesses)
   ]
 end
 
+def save_game(hidden_word, letter_guesses, wrong_guesses)
+  savefile = File.open("save.sav", 'w')
+  savefile.puts(hidden_word)
+  savefile.puts(letter_guesses.join(','))
+  savefile.puts(wrong_guesses)
+  savefile.close
+end
+
+def load_game
+  return false unless File.exist?("save.sav")
+
+  savefile = File.open("save.sav", 'r')
+  hidden_word = savefile.readline.chomp
+  letter_guesses = savefile.readline.chomp.split(',')
+  wrong_guesses = savefile.readline.chomp.to_i
+  puts "#{BLUE}Save file loaded. Save file deleted.#{RESET_COLOR}\n\n"
+  letter_guess_feedback('0', letter_guesses, hidden_word, wrong_guesses)
+  savefile.close
+  File.delete("save.sav")
+  [hidden_word, letter_guesses, wrong_guesses]
+end
+
 def play_round
   wrong_guesses = 0
   letter_guesses = []
   hidden_word = choose_word_from_file(5, 12)
+  
+  load_info = load_game
+  if load_info
+    hidden_word = load_info[0]
+    letter_guesses = load_info[1]
+    wrong_guesses = load_info[2]
+  end
+
   loop do
-    input_string = accept_guess_input("Input word to guess or single letter>>", hidden_word, letter_guesses)
+    input_string = accept_guess_input("Input guess-word, letter, or 'save'>>", hidden_word, letter_guesses)
 
     if input_string.length == 1
       letter_guesses.push(input_string)
       wrong_guesses += 1 unless hidden_word.include?(input_string)
       letter_guess_feedback(input_string, letter_guesses, hidden_word, wrong_guesses)
+    elsif input_string.downcase == 'save'
+      save_game(hidden_word, letter_guesses, wrong_guesses)
+      puts "Game saved! Come back later."
+      break
     elsif input_string == hidden_word
       puts "Congraulations, you guessed the word with only #{wrong_guesses} wrong guesses!"
       break
