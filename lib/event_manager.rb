@@ -20,9 +20,8 @@ def clean_phone_num(phone_num)
   end
 end
 
-def get_hour(date_time)
-  # time = date_time.split(' ')[1]
-  Time.strptime(date_time, "%m/%d/%y %H:%M").hour
+def get_date_object(date_time)
+  Time.strptime(date_time, "%m/%d/%y %H:%M")
 end
 
 def most_popular_hour(hour_frequency)
@@ -33,6 +32,29 @@ def most_popular_hour(hour_frequency)
       "#{item[0]} am"
     else
       "#{item[0] - 12} pm"
+    end
+  end
+end
+
+def most_popular_wkday(wkday_frequency)
+  wkday_frequency = wkday_frequency.sort_by { |wkday, freq| -freq }
+  wkday_frequency = wkday_frequency.select { |item| item[1] == wkday_frequency[0][1] }
+  wkday_frequency.map do |item|
+    case item[0]
+    when 0
+      "Sunday"
+    when 1
+      "Monday"
+    when 2
+      "Tuesday"
+    when 3
+      "Wednesday"
+    when 4
+      "Thursday"
+    when 5
+      "Friday"
+    when 6
+      "Saturday"
     end
   end
 end
@@ -74,20 +96,25 @@ contents = CSV.open(
 )
 
 hours = Hash.new(0)
+wkdays = Hash.new(0)
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
   zipcode = clean_zipcode(row[:zipcode])
   legislators = legislators_by_zipcode(zipcode)
   phone_num = clean_phone_num(row[:homephone])
-  hour = get_hour(row[:regdate])
+
+  date = get_date_object(row[:regdate])
+  hour = date.hour
   hours[hour] += 1
 
-  #puts "Name: #{name}. Hour: #{hour}"
+  wkday = date.wday
+  wkdays[wkday] += 1
 
   form_letter = erb_template.result(binding)
 
-  #save_thank_you_letter(id, form_letter)
+  save_thank_you_letter(id, form_letter)
 end
 
 puts "The most popular hour(s) are: #{most_popular_hour(hours)}"
+puts "The most popular weekday(s) are: #{most_popular_wkday(wkdays)}"
