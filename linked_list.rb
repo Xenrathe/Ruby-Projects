@@ -154,24 +154,3 @@ class LinkedList
     count
   end
 end
-
-linked_list = LinkedList.new
-linked_list.append(Node.new('c'))
-linked_list.append(Node.new('e'))
-linked_list.prepend(Node.new('a'))
-puts "Size is #{linked_list.size}"
-puts "Head val is #{linked_list.head.value}"
-puts "Tail val is #{linked_list.tail.value}"
-puts "Val at 1 is #{linked_list.at(1).value}"
-puts "Pop value is #{linked_list.pop.value}"
-puts "List contains c?: #{linked_list.contains?('c')}"
-puts "Index of 'c' is #{linked_list.find('c')}"
-puts "Index of 'b' is #{linked_list.find('b')}"
-linked_list.append(Node.new('d'))
-puts "Index of 'd' is #{linked_list.find('d')}"
-linked_list.insert_at('b', 10)
-linked_list.insert_at('b', 1)
-puts linked_list
-linked_list.remove_at(10)
-linked_list.remove_at(linked_list.size - 2)
-puts linked_list
