@@ -138,23 +138,21 @@ class Tree
     return nil if node.nil?
 
     if value < node.value
-      node.left = delete_unbalanced(value, node.left)
+      node.left = delete_balanced(value, node.left)
     elsif value > node.value
-      node.right = delete_unbalanced(value, node.right)
-    else # Found the value
-      if node.left.nil?
-        temp = node.right
-        node = nil
-        return temp
-      elsif node.right.nil?
-        temp = node.left
-        node = nil
-        return temp
-      else
-        temp = get_min_value_node(node.right)
-        node.value = temp.value
-        node.right = delete(node.right, temp.value)
-      end
+      node.right = delete_balanced(value, node.right)
+    elsif node.left.nil?
+      temp = node.right
+      node = nil
+      return temp
+    elsif node.right.nil?
+      temp = node.left
+      node = nil
+      return temp
+    else
+      temp = get_min_value_node(node.right)
+      node.value = temp.value
+      node.right = delete_balanced(temp.value, node.right)
     end
 
     return nil if node.nil?
@@ -271,5 +269,5 @@ test_tree.insert(4, true)
 test_tree.insert(9, true)
 test_tree.insert(13, true)
 test_tree.pretty_print
-test_tree.delete(1, true)
+test_tree.delete(9, true)
 test_tree.pretty_print
