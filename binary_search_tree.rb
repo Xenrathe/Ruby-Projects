@@ -15,7 +15,7 @@ class Node
   end
 
   def to_s
-    "Node of value: #{value} and height: #{height}"
+    "Node:[val: #{value} H: #{height}]"
   end
 
 end
@@ -25,18 +25,6 @@ class Tree
 
   def initialize(data_array = [])
     build_tree(data_array)
-  end
-
-  def get_height(node)
-    return 0 if node.nil?
-
-    node.height
-  end
-
-  def height_balance(node)
-    return 0 if node.nil?
-
-    get_height(node.left) - get_height(node.right)
   end
 
   def build_tree(input_array)
@@ -84,7 +72,42 @@ class Tree
     end
   end
 
+  def level_order_iter
+    queue_of_nodes = [@root]
+
+    until queue_of_nodes.empty?
+      queue_of_nodes.push(queue_of_nodes[0].left) unless queue_of_nodes[0].left.nil?
+      queue_of_nodes.push(queue_of_nodes[0].right) unless queue_of_nodes[0].right.nil?
+      yield queue_of_nodes.shift
+    end
+  end
+
+  def level_order_recursive(queue_of_nodes, print_lambda)
+    if queue_of_nodes.empty?
+      print_lambda.call(nil)
+      return
+    end
+
+    queue_of_nodes.push(queue_of_nodes[0].left) unless queue_of_nodes[0].left.nil?
+    queue_of_nodes.push(queue_of_nodes[0].right) unless queue_of_nodes[0].right.nil?
+    print_lambda.call(queue_of_nodes.shift)
+
+    level_order_recursive(queue_of_nodes, print_lambda)
+  end
+
   private
+
+  def get_height(node)
+    return 0 if node.nil?
+
+    node.height
+  end
+
+  def height_balance(node)
+    return 0 if node.nil?
+
+    get_height(node.left) - get_height(node.right)
+  end
 
   def build_branch(array)
     return nil if array.empty?
@@ -297,5 +320,12 @@ test_tree.insert(13, true)
 test_tree.pretty_print
 test_tree.delete(5, true)
 test_tree.pretty_print
-test_tree.find(10)
-test_tree.find(13)
+
+print_lambda = lambda { |node|
+  if node.nil?
+    print "end\n"
+  else
+    print "#{node.value} -> "
+  end
+}
+test_tree.level_order_recursive([test_tree.root], print_lambda)
