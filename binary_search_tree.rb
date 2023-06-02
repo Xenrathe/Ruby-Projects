@@ -14,6 +14,10 @@ class Node
     value <=> other.value
   end
 
+  def to_s
+    "Node of value: #{value} and height: #{height}"
+  end
+
 end
 
 class Tree
@@ -42,6 +46,46 @@ class Tree
     @root = build_branch(input_array)
   end
 
+  def pretty_print(node = @root, prefix = '', is_left = true)
+    pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
+    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
+    pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
+  end
+
+  def find(value)
+    found_node = find_machinery(value, @root)
+    if found_node.nil?
+      puts "#{value} not found in tree."
+    else
+      puts "#{value} found in #{found_node}"
+    end
+
+    found_node
+  end
+
+  # can either do simple insert or a self-balancing insert
+  def insert(value, self_balance = true)
+    if @root.nil?
+      @root = Node.new(value)
+    elsif self_balance
+      insert_balanced(value, @root)
+    else
+      insert_unbalanced(value, @root)
+    end
+  end
+
+  def delete(value, self_balance = true)
+    if @root.nil?
+      puts "Tree is empty. Deletion not possible."
+    elsif self_balance
+      delete_balanced(value, @root)
+    else
+      delete_unbalanced(value, @root)
+    end
+  end
+
+  private
+
   def build_branch(array)
     return nil if array.empty?
 
@@ -54,19 +98,20 @@ class Tree
     current_root
   end
 
-  # can either do simple insert or a self-balancing insert
-  def insert(value, self_balance = true)
-    if @root.nil?
-      @root = Node.new(value)
-    elsif self_balance
-      insert_traversal_balanced(value, @root)
+  def find_machinery(value, node)
+    return nil if node.nil?
+
+    if value == node.value
+      node
+    elsif value < node.value
+      find_machinery(value, node.left)
     else
-      insert_traversal_unbalanced(value, @root)
+      find_machinery(value, node.right)
     end
   end
 
   # This is an AVL tree insertion to maintain balance
-  def insert_traversal_balanced(value, node)
+  def insert_balanced(value, node)
 
     # Normal BST insertion
     # Note: In case value == node.value, tree traversal stops
@@ -74,9 +119,9 @@ class Tree
     if node.nil?
       return Node.new(value)
     elsif value < node.value
-      node.left = insert_traversal_balanced(value, node.left)
+      node.left = insert_balanced(value, node.left)
     elsif value > node.value
-      node.right = insert_traversal_balanced(value, node.right)
+      node.right = insert_balanced(value, node.right)
     end
 
     # Update height of node
@@ -109,29 +154,17 @@ class Tree
 
   # This is the simple BST insertion
   # It can result in an unbalanced tree
-  def insert_traversal_unbalanced(value, node)
+  def insert_unbalanced(value, node)
 
-    # Note: In case value == node.value, tree traversal stops
-    # This prevents duplicates
     if node.nil?
       return Node.new(value)
     elsif value < node.value
-      node.left = insert_traversal_unbalanced(value, node.left)
+      node.left = insert_unbalanced(value, node.left)
     elsif value > node.value
-      node.right = insert_traversal_unbalanced(value, node.right)
+      node.right = insert_unbalanced(value, node.right)
     end
 
     node
-  end
-
-  def delete(value, self_balance = true)
-    if @root.nil?
-      puts "Tree is empty. Deletion not possible."
-    elsif self_balance
-      delete_balanced(value, @root)
-    else
-      delete_unbalanced(value, @root)
-    end
   end
 
   def delete_balanced(value, node)
@@ -255,19 +288,14 @@ class Tree
     
     y
   end
-
-  def pretty_print(node = @root, prefix = '', is_left = true)
-    pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
-    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
-    pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
-  end
 end
 
-#test_tree = Tree.new([24, 7, 14, 5, 9, 10, 4, 3, 11, 15])
-test_tree = Tree.new([1])
+test_tree = Tree.new([24, 7, 14, 5, 9, 10, 4, 3, 11, 15])
 test_tree.insert(4, true)
 test_tree.insert(9, true)
 test_tree.insert(13, true)
 test_tree.pretty_print
-test_tree.delete(9, true)
+test_tree.delete(5, true)
 test_tree.pretty_print
+test_tree.find(10)
+test_tree.find(13)
