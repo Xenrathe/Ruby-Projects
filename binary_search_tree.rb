@@ -158,7 +158,7 @@ class Tree
   # Height is stored in node
   def height(node)
     return 0 if node.nil?
-
+    
     node.height
   end
 
@@ -175,6 +175,16 @@ class Tree
       count += 1
       depth(node, current_node.right, count)
     end
+  end
+
+  # Using level_order, check every node's height-balance
+  def balanced?
+    level_order_iter { |node| return false if height_balance(node).abs > 1 }
+    true
+  end
+
+  def rebalance
+    build_tree(inorder)
   end
 
   private
@@ -263,6 +273,9 @@ class Tree
       node.right = insert_unbalanced(value, node.right)
     end
 
+    # Update height of node
+    node.height = 1 + [height(node.left), height(node.right)].max
+
     node
   end
 
@@ -334,11 +347,16 @@ class Tree
       else
         temp = get_min_value_node(node.right)
         node.value = temp.value
-        node.right = delete(node.right, temp.value)
+        node.right = delete_unbalanced(temp.value, node.right)
       end
     end
 
     return nil if node.nil?
+
+    # Update height
+    node.height = 1 + [height(node.left), height(node.right)].max
+
+    node
   end
 
   # Go left until there is no more left
@@ -389,20 +407,12 @@ class Tree
   end
 end
 
-test_tree = Tree.new([24, 7, 14, 5, 9, 10, 4, 3, 11, 15])
-test_tree.insert(4, true)
-test_tree.insert(9, true)
-test_tree.insert(13, true)
+test_tree = Tree.new(Array.new(15) { rand(1..100) })
 test_tree.pretty_print
-test_tree.delete(5, true)
-test_tree.pretty_print
-
-test_tree.level_order_recursive do |node|
-  if node.value.nil?
-    print "end\n"
-  else
-    print "#{node.value} -> "
-  end
+if test_tree.balanced?
+  puts "Tree is initially balanced."
+else
+  puts "Tree is initially unbalanced."
 end
 
 print "Level_order array: #{test_tree.level_order_recursive}\n"
@@ -410,5 +420,33 @@ print "In order array: #{test_tree.inorder}\n"
 print "Preorder array: #{test_tree.preorder}\n"
 print "Postorder via block: "
 test_tree.postorder do |node|
-  print "V:#{node.value} D:#{test_tree.depth(node)} -> "
+  print "#{node.value} -> "
 end
+print "\n"
+
+4.times do
+  test_tree.insert(rand(101..150), false)
+end
+test_tree.pretty_print
+if test_tree.balanced?
+  puts "Tree is balanced."
+else
+  puts "Tree is unbalanced."
+end
+
+test_tree.rebalance
+test_tree.pretty_print
+if test_tree.balanced?
+  puts "Tree is balanced."
+else
+  puts "Tree is unbalanced."
+end
+
+print "Level_order array: #{test_tree.level_order_recursive}\n"
+print "In order array: #{test_tree.inorder}\n"
+print "Preorder array: #{test_tree.preorder}\n"
+print "Postorder via block: "
+test_tree.postorder do |node|
+  print "#{node.value} -> "
+end
+print "\n"
