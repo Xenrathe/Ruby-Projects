@@ -74,25 +74,39 @@ class Tree
 
   def level_order_iter
     queue_of_nodes = [@root]
+    array_of_values = []
 
     until queue_of_nodes.empty?
       queue_of_nodes.push(queue_of_nodes[0].left) unless queue_of_nodes[0].left.nil?
       queue_of_nodes.push(queue_of_nodes[0].right) unless queue_of_nodes[0].right.nil?
-      yield queue_of_nodes.shift
+
+      if block_given?
+        yield queue_of_nodes.shift
+      else
+        array_of_values.push(queue_of_nodes.shift.value)
+      end
     end
+
+    array_of_values
   end
 
-  def level_order_recursive(queue_of_nodes, print_lambda)
+  def level_order_recursive(array_of_values = [], queue_of_nodes = [@root], &block)
     if queue_of_nodes.empty?
-      print_lambda.call(nil)
-      return
+      block.call(Node.new(nil)) if block_given?
+      return array_of_values
     end
 
     queue_of_nodes.push(queue_of_nodes[0].left) unless queue_of_nodes[0].left.nil?
     queue_of_nodes.push(queue_of_nodes[0].right) unless queue_of_nodes[0].right.nil?
-    print_lambda.call(queue_of_nodes.shift)
+    
+    if block_given?
+      block.call(queue_of_nodes.shift)
+    else
+      array_of_values.push(queue_of_nodes.shift.value)
+    end
 
-    level_order_recursive(queue_of_nodes, print_lambda)
+    level_order_recursive(array_of_values, queue_of_nodes, &block)
+    array_of_values
   end
 
   private
@@ -321,11 +335,12 @@ test_tree.pretty_print
 test_tree.delete(5, true)
 test_tree.pretty_print
 
-print_lambda = lambda { |node|
-  if node.nil?
+test_tree.level_order_recursive do |node|
+  if node.value.nil?
     print "end\n"
   else
     print "#{node.value} -> "
   end
-}
-test_tree.level_order_recursive([test_tree.root], print_lambda)
+end
+
+print test_tree.level_order_recursive
