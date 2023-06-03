@@ -155,10 +155,26 @@ class Tree
     array_of_values
   end
 
+  # Height is stored in node
   def height(node)
     return 0 if node.nil?
 
     node.height
+  end
+
+  # Alternatively, could store depth during node and keep track during initialize, insert, delete
+  def depth(node, current_node = @root, count = 0)
+    return -1 if node.nil?
+
+    if node == current_node
+      count
+    elsif node.value < current_node.value
+      count += 1
+      depth(node, current_node.left, count)
+    else
+      count += 1
+      depth(node, current_node.right, count)
+    end
   end
 
   private
@@ -394,5 +410,5 @@ print "In order array: #{test_tree.inorder}\n"
 print "Preorder array: #{test_tree.preorder}\n"
 print "Postorder via block: "
 test_tree.postorder do |node|
-  print "#{node.value} -> "
+  print "V:#{node.value} D:#{test_tree.depth(node)} -> "
 end
