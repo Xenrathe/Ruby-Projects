@@ -109,18 +109,64 @@ class Tree
     array_of_values
   end
 
-  private
+  def inorder(node = @root, array_of_values = [], &block)
+    return if node.nil?
 
-  def get_height(node)
+    inorder(node.left, array_of_values, &block)
+
+    if block_given?
+      block.call(node)
+    else
+      array_of_values.push(node.value)
+    end
+
+    inorder(node.right, array_of_values, &block)
+
+    array_of_values
+  end
+
+  def preorder(node = @root, array_of_values = [], &block)
+    return if node.nil?
+
+    if block_given?
+      block.call(node)
+    else
+      array_of_values.push(node.value)
+    end
+
+    preorder(node.left, array_of_values, &block)
+    preorder(node.right, array_of_values, &block)
+
+    array_of_values
+  end
+
+  def postorder(node = @root, array_of_values = [], &block)
+    return if node.nil?
+
+    postorder(node.left, array_of_values, &block)
+    postorder(node.right, array_of_values, &block)
+
+    if block_given?
+      block.call(node)
+    else
+      array_of_values.push(node.value)
+    end
+
+    array_of_values
+  end
+
+  def height(node)
     return 0 if node.nil?
 
     node.height
   end
 
+  private
+
   def height_balance(node)
     return 0 if node.nil?
 
-    get_height(node.left) - get_height(node.right)
+    height(node.left) - height(node.right)
   end
 
   def build_branch(array)
@@ -130,7 +176,7 @@ class Tree
     current_root = Node.new(array[mid_index])
     current_root.left = build_branch(array.slice(0, mid_index))
     current_root.right = build_branch(array.slice(mid_index + 1, mid_index))
-    current_root.height = 1 + [get_height(current_root.left), get_height(current_root.right)].max
+    current_root.height = 1 + [height(current_root.left), height(current_root.right)].max
 
     current_root
   end
@@ -162,7 +208,7 @@ class Tree
     end
 
     # Update height of node
-    node.height = 1 + [get_height(node.left), get_height(node.right)].max
+    node.height = 1 + [height(node.left), height(node.right)].max
 
     # Get balance factor
     balance = height_balance(node)
@@ -228,7 +274,7 @@ class Tree
     return nil if node.nil?
 
     # Update height
-    node.height = 1 + [get_height(node.left), get_height(node.right)].max
+    node.height = 1 + [height(node.left), height(node.right)].max
 
     balance = height_balance(node)
 
@@ -298,8 +344,8 @@ class Tree
     node.right = t_2
 
     # Update height of node
-    node.height = 1 + [get_height(node.left), get_height(node.right)].max
-    y.height = 1 + [get_height(y.left), get_height(y.right)].max
+    node.height = 1 + [height(node.left), height(node.right)].max
+    y.height = 1 + [height(y.left), height(y.right)].max
 
     # Update base root if it changed
     @root = y if node == @root
@@ -317,8 +363,8 @@ class Tree
     node.left = t_3
 
     # Update height of node
-    node.height = 1 + [get_height(node.left), get_height(node.right)].max
-    y.height = 1 + [get_height(y.left), get_height(y.right)].max
+    node.height = 1 + [height(node.left), height(node.right)].max
+    y.height = 1 + [height(y.left), height(y.right)].max
 
     # Update central root if it changed
     @root = y if node == @root
@@ -343,4 +389,10 @@ test_tree.level_order_recursive do |node|
   end
 end
 
-print test_tree.level_order_recursive
+print "Level_order array: #{test_tree.level_order_recursive}\n"
+print "In order array: #{test_tree.inorder}\n"
+print "Preorder array: #{test_tree.preorder}\n"
+print "Postorder via block: "
+test_tree.postorder do |node|
+  print "#{node.value} -> "
+end
