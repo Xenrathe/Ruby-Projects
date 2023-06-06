@@ -407,46 +407,53 @@ class Tree
   end
 end
 
-test_tree = Tree.new(Array.new(15) { rand(1..100) })
+def test_function
+  test_tree = Tree.new(Array.new(15) { rand(1..100) })
+  test_tree.pretty_print
+  if test_tree.balanced?
+    puts "Tree is initially balanced."
+  else
+    puts "Tree is initially unbalanced."
+  end
+
+  print "Level_order array: #{test_tree.level_order_recursive}\n"
+  print "In order array: #{test_tree.inorder}\n"
+  print "Preorder array: #{test_tree.preorder}\n"
+  print "Postorder via block: "
+  test_tree.postorder do |node|
+    print "#{node.value} -> "
+  end
+  print "\n"
+
+  4.times do
+    test_tree.insert(rand(101..150), false)
+  end
+  test_tree.pretty_print
+  if test_tree.balanced?
+    puts "Tree is balanced."
+  else
+    puts "Tree is unbalanced."
+  end
+
+  test_tree.rebalance
+  test_tree.pretty_print
+  if test_tree.balanced?
+    puts "Tree is balanced."
+  else
+    puts "Tree is unbalanced."
+  end
+
+  print "Level_order array: #{test_tree.level_order_recursive}\n"
+  print "In order array: #{test_tree.inorder}\n"
+  print "Preorder array: #{test_tree.preorder}\n"
+  print "Postorder via block: "
+  test_tree.postorder do |node|
+    print "#{node.value} -> "
+  end
+  print "\n"
+end
+
+test_tree = Tree.new([3, 9, 12, 4, 10])
 test_tree.pretty_print
-if test_tree.balanced?
-  puts "Tree is initially balanced."
-else
-  puts "Tree is initially unbalanced."
-end
-
-print "Level_order array: #{test_tree.level_order_recursive}\n"
-print "In order array: #{test_tree.inorder}\n"
-print "Preorder array: #{test_tree.preorder}\n"
-print "Postorder via block: "
-test_tree.postorder do |node|
-  print "#{node.value} -> "
-end
-print "\n"
-
-4.times do
-  test_tree.insert(rand(101..150), false)
-end
+test_tree.delete(9, false)
 test_tree.pretty_print
-if test_tree.balanced?
-  puts "Tree is balanced."
-else
-  puts "Tree is unbalanced."
-end
-
-test_tree.rebalance
-test_tree.pretty_print
-if test_tree.balanced?
-  puts "Tree is balanced."
-else
-  puts "Tree is unbalanced."
-end
-
-print "Level_order array: #{test_tree.level_order_recursive}\n"
-print "In order array: #{test_tree.inorder}\n"
-print "Preorder array: #{test_tree.preorder}\n"
-print "Postorder via block: "
-test_tree.postorder do |node|
-  print "#{node.value} -> "
-end
-print "\n"
