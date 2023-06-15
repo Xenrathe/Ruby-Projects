@@ -172,7 +172,7 @@ describe ConnectFour do
          [0, 0, 0, 0, 0, 2, 1],
          [0, 0, 0, 0, 1, 1, 1],
          [0, 0, 0, 1, 1, 2, 1],
-         [0, 1, 0, 1, 2, 1, 2]]) }
+         [0, 1, 0, 2, 2, 1, 2]]) }
 
       it 'returns a 1' do
         expect(column_win_game.winner_check).to eq(1)

@@ -12,7 +12,35 @@ class ConnectFour
   # 2. Updates and displays board
   # 3. Checks for winner
   def play_game
-    puts "Player #{@current_player}, input column [1 2 3 4 5 6 7] to drop token into>>"
+    puts 'Welcome to Connect-Four! New game initialized!'
+
+    while winner_check.zero?
+      display_board
+      puts "Player #{@current_player}, input column [1 2 3 4 5 6 7] to drop token into>>"
+      drop_piece(accept_input)
+      @current_player = @current_player == 1 ? 2 : 1
+    end
+
+    display_board
+    winner = winner_check
+    if winner == -1
+      puts "It was a draw!\n\n"
+    else
+      puts "Congratulations player #{winner}! You won!\n\n"
+    end
+
+    loop do
+      puts 'Would you like to play another game? Y/N?>>'
+      input_str = gets.chomp.downcase
+      if input_str == 'y'
+        @current_player = 1
+        @board = Array.new(6) { Array.new(7) { 0 } }
+        play_game
+        break
+      elsif input_str == 'n'
+        break
+      end
+    end
   end
 
   # An input loop via 'gets'
@@ -66,9 +94,9 @@ class ConnectFour
     end
 
     # Check vertically
-    7.times do |column|
-      @board.transpose.each_cons(4) do |slice|
-        return slice[0][column] if slice.flatten.uniq.length == 1 && !slice[0][column].zero?
+    @board.transpose.each do |row|
+      row.each_cons(4) do |slice|
+        return slice[0] if slice.uniq.length == 1 && !slice[0].zero?
       end
     end
 
@@ -100,28 +128,31 @@ class ConnectFour
   def display_board
 
     # Define color and symbols for players
+    red = "\e[38;2;255;0;0m"
+    yellow = "\e[1m\e[33m"
+    blue = "\e[1m\e[34m"
+    reset = "\e[0m"
+
     player_colors = {
-      1 => "\e[31m",  # Red color
-      2 => "\e[33m"   # Yellow color
+      1 => red, # Red color
+      2 => yellow # Yellow color
     }
-    player_symbols = {
-      1 => "\u26AB",  # Large red circle
-      2 => "\u26AA"   # Large white circle
-    }
+    player_symbol = "\u2638" # Snowflake symbol - solid circle has spacing issues
 
     # Display the board
-    puts '  1 2 3 4 5 6 7 '
-    puts '-----------------'
+    puts "\n   1 2 3 4 5 6 7 "
+    puts "  #{blue}---------------#{reset}"
     @board.each do |row|
       row_string = row.map do |cell|
-        if cell.nil?
+        if cell.zero?
           ' '
         else
-          "#{player_colors[cell]}#{player_symbols[cell]}\e[0m"
+          "#{player_colors[cell]}#{player_symbol}#{reset}"
         end
-      end.join('|')
-      puts "|#{row_string}|"
-      puts '-----------------'
+      end.join("#{blue}|#{reset}")
+      puts "  #{blue}|#{reset}#{row_string}#{blue}|#{reset}"
+      puts "  #{blue}---------------#{reset}"
     end
+    puts "\n\n"
   end
 end
