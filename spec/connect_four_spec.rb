@@ -8,14 +8,14 @@ describe ConnectFour do
     context 'when initializing a default game' do
       it 'creates a 2d array with 7 columns, initialized to 0' do
         board = default_game.instance_variable_get(:@board)
-        expect(board[6][0]).to eq(0)
+        expect(board[0][6]).to eq(0)
       end
     end
 
     context 'when initializing a default game' do
       it 'creates a 2d array with 6 rows, initialized to 0' do
         board = default_game.instance_variable_get(:@board)
-        expect(board[0][5]).to eq(0)
+        expect(board[5][0]).to eq(0)
       end
     end
   end

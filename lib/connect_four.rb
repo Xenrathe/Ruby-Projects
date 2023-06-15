@@ -2,7 +2,9 @@
 class ConnectFour
 
   # Accept board, current_player
-  def initialize
+  def initialize(board = Array.new(6) { Array.new(7) {0}}, current_player = 1)
+    @board = board
+    @current_player = current_player
   end
 
   # Runs a loop that:
@@ -32,5 +34,30 @@ class ConnectFour
 
   # Displays board, function generated via AI
   def display_board
+
+    # Define color and symbols for players
+    player_colors = {
+      1 => "\e[31m",  # Red color
+      2 => "\e[33m"   # Yellow color
+    }
+    player_symbols = {
+      1 => "\u26AB",  # Large red circle
+      2 => "\u26AA"   # Large white circle
+    }
+
+    # Display the board
+    puts '  1 2 3 4 5 6 7 '
+    puts '-----------------'
+    @board.each do |row|
+      row_string = row.map do |cell|
+        if cell.nil?
+          ' '
+        else
+          "#{player_colors[cell]}#{player_symbols[cell]}\e[0m"
+        end
+      end.join('|')
+      puts "|#{row_string}|"
+      puts '-----------------'
+    end
   end
 end
