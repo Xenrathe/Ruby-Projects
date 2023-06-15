@@ -66,7 +66,7 @@ describe ConnectFour do
       it 'sends an error message' do
         low_input = '0'
 
-        expect(default_game).to receive(:puts).with('Error: Please input a number greater than 0 but less than 8.')
+        expect(default_game).to receive(:puts).with('Error: Please input a number greater than 0 but less than 8>>')
         default_game.valid_input?(low_input)
       end
     end
@@ -75,18 +75,18 @@ describe ConnectFour do
       it 'sends an error message' do
         high_input = '8'
 
-        expect(default_game).to receive(:puts).with('Error: Please input a number greater than 0 but less than 8.')
+        expect(default_game).to receive(:puts).with('Error: Please input a number greater than 0 but less than 8>>')
         default_game.valid_input?(high_input)
       end
     end
 
     context 'when it receives a column # that is already full' do
-      subject(:full_col_game) { Array.new(6) { Array.new(7) { 1 }}}
+      subject(:full_col_game) { described_class.new (Array.new(6) { Array.new(7) { 1 } }) }
       it 'sends an error message' do
         full_input = '7'
 
-        expect(full_col_game).to receive(:puts).with('Error: Column is full! Drop into a non-full column.')
-        full_game.valid_input?(full_input)
+        expect(full_col_game).to receive(:puts).with('Error: Column is full! Drop into a non-full column>>')
+        full_col_game.valid_input?(full_input)
       end
     end
 
@@ -94,7 +94,7 @@ describe ConnectFour do
       it 'sends an error message' do
         bad_input = 'a'
 
-        expect(default_game).to receive(:puts).with('Error: Please input a number greater than 0 but less than 8.')
+        expect(default_game).to receive(:puts).with('Error: Please input a number greater than 0 but less than 8>>')
         default_game.valid_input?(bad_input)
       end
     end

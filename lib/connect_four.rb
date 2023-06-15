@@ -2,7 +2,7 @@
 class ConnectFour
 
   # Accept board, current_player
-  def initialize(board = Array.new(6) { Array.new(7) {0}}, current_player = 1)
+  def initialize(board = Array.new(6) { Array.new(7) { 0 } }, current_player = 1)
     @board = board
     @current_player = current_player
   end
@@ -33,6 +33,15 @@ class ConnectFour
 
   # Makes sure input is a number from 1-7
   def valid_input?(input)
+    if input.to_i < 1 || input.to_i > 7
+      puts 'Error: Please input a number greater than 0 but less than 8>>'
+      nil
+    elsif @board[0][input.to_i - 1] != 0
+      puts 'Error: Column is full! Drop into a non-full column>>'
+      nil
+    else
+      input
+    end
   end
 
   # Updates board by 'dropping' a piece in a given column
