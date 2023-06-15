@@ -24,27 +24,28 @@ describe ConnectFour do
 
     subject(:default_game) { described_class.new }
 
-    context 'when it receives an input not of length 1' do
-      it 'sends an error message' do
-        long_input = '12'
-        allow(default_game).to receive(:gets).and_return(long_input)
+    context 'when it receives an input not of length 1 before a valid input' do
+      before do
+        allow(default_game).to receive(:gets).and_return('12', '2')
+        allow(default_game).to receive(:valid_input?).and_return(true)
+      end
 
-        expect(default_game).to receive(:puts).once.with('Error: Please input a number from 1 to 7.')
+      it 'sends an error message once' do
+        expect(default_game).to receive(:puts).once.with('Error: Please input a number from 1 to 7>>')
         default_game.accept_input
       end
     end
 
-    context 'when it receives an input of length 1' do
+    context 'when it receives a valid input of length 1' do
       before do
-        allow(default_game).to receive(:verify_input?).and_return(nil)
+        allow(default_game).to receive(:valid_input?).and_return(true)
       end
 
-      it 'does not send an error message' do
+      it 'returns the input as a number' do
         valid_input = '7'
         allow(default_game).to receive(:gets).and_return(valid_input)
 
-        expect(default_game).not_to receive(:puts)
-        default_game.accept_input
+        expect(default_game.accept_input).to eql(7)
       end
     end
   end

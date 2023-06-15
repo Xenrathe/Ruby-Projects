@@ -12,10 +12,23 @@ class ConnectFour
   # 2. Updates and displays board
   # 3. Checks for winner
   def play_game
+    puts "Player #{@current_player}, input column [1 2 3 4 5 6 7] to drop token into>>"
   end
 
   # An input loop via 'gets'
   def accept_input
+    loop do
+      input_string = gets.chomp
+
+      if input_string.length != 1
+        puts 'Error: Please input a number from 1 to 7>>'
+        next
+      end
+
+      next unless valid_input?(input_string)
+
+      return input_string.to_i
+    end
   end
 
   # Makes sure input is a number from 1-7
