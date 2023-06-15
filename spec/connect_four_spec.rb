@@ -158,7 +158,7 @@ describe ConnectFour do
          [0, 0, 0, 0, 0, 2, 1],
          [0, 0, 0, 0, 1, 1, 1],
          [0, 0, 0, 1, 1, 2, 1],
-         [0, 1, 0, 1, 2, 1, 2]]) }
+         [0, 1, 0, 2, 2, 1, 2]]) }
 
       it 'returns a 0' do
         expect(no_winner_game.winner_check).to eq(0)
@@ -222,16 +222,16 @@ describe ConnectFour do
     end
 
     context 'when the board is totally full with no winner' do
-      subject(:posdiag_win_game) { described_class.new(
+      subject(:full_no_win_game) { described_class.new(
         [[1, 2, 1, 2, 1, 2, 1],
-         [2, 1, 2, 1, 2, 1, 2],
+         [1, 2, 1, 2, 1, 2, 1],
          [1, 2, 1, 2, 1, 2, 1],
          [2, 1, 2, 1, 2, 1, 2],
-         [1, 2, 1, 2, 1, 2, 1],
+         [2, 1, 2, 1, 2, 1, 2],
          [2, 1, 2, 1, 2, 1, 2]]) }
 
       it 'returns a -1' do
-        expect(posdiag_win_game.winner_check).to eq(-1)
+        expect(full_no_win_game.winner_check).to eq(-1)
       end
     end
   end

@@ -58,6 +58,40 @@ class ConnectFour
 
   # Returns 0, 1, or 2 for no winner or num of winner
   def winner_check
+    # Check horizontally
+    @board.each do |row|
+      row.each_cons(4) do |slice|
+        return slice[0] if slice.uniq.length == 1 && !slice[0].zero?
+      end
+    end
+
+    # Check vertically
+    7.times do |column|
+      @board.transpose.each_cons(4) do |slice|
+        return slice[0][column] if slice.flatten.uniq.length == 1 && !slice[0][column].zero?
+      end
+    end
+
+    # Check diagonally
+    (0..2).each do |row|
+      # top-left to bottom-right
+      (0..3).each do |column|
+        slice = [@board[row][column], @board[row + 1][column + 1], @board[row + 2][column + 2], @board[row + 3][column + 3]]
+        return slice[0] if slice.uniq.length == 1 && !slice[0].zero?
+      end
+
+      # top-right to bottom-left
+      (3..6).each do |column|
+        slice = [@board[row][column], @board[row + 1][column - 1], @board[row + 2][column - 2], @board[row + 3][column - 3]]
+        return slice[0] if slice.uniq.length == 1 && !slice[0].zero?
+      end
+    end
+
+    # Check if the board is completely full, but no winner
+    return -1 if @board.flatten.none?(&:zero?)
+
+    # No winner found but moves remain
+    0
   end
 
   private
