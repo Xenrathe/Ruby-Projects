@@ -45,7 +45,15 @@ class ConnectFour
   end
 
   # Updates board by 'dropping' a piece in a given column
+  # Other functions will prevent dropping into a full column, so no need to check
   def drop_piece(col_num)
+    # Count bottom up until you hit the first in the given column
+    @board.reverse_each do |row|
+      if row[col_num - 1].zero?
+        row[col_num - 1] = @current_player
+        break
+      end
+    end
   end
 
   # Returns 0, 1, or 2 for no winner or num of winner
