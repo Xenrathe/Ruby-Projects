@@ -12,4 +12,4 @@ Implements a BALANCED Binary Search Tree, with multiple methods and search algor
 -level-order search algorithm, both recursive and iterative versions
 -preorder, inorder, and postorder search algorithms
 
-Written in Ruby
+[Assignment on The Odin Project](https://www.theodinproject.com/lessons/ruby-binary-search-trees)

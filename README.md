@@ -12,6 +12,18 @@ Ruby-Projects is active at (replit)
 
 A balanced Binary Search Tree capable of deletion (both simple and self-balancing), insertion (simple and self-balancing), various traversal, re-balancing, and other functions.
 
+### Connect Four
+
+[Assignment on The Odin Project](https://www.theodinproject.com/lessons/ruby-connect-four)
+
+A CLI two-player game of Connect Four.
+
+### Hangman
+
+[Assignment on The Odin Project](https://www.theodinproject.com/lessons/ruby-hangman)
+
+A CLI game of Hangman, demonstrating serialization (loads words from file, can save/load game)
+
 ### Features:
 
 - Access to the Core-book SRD data (in the form of JSON data)
