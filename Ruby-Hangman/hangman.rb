@@ -84,7 +84,8 @@ module Hangman
   end
 
   def self.save_game(hidden_word, letter_guesses, wrong_guesses)
-    savefile = File.open("save.sav", 'w')
+    filepath = File.join(__dir__, 'save.sav')
+    savefile = File.open(filepath, 'w')
     savefile.puts(hidden_word)
     savefile.puts(letter_guesses.join(','))
     savefile.puts(wrong_guesses)
@@ -92,16 +93,17 @@ module Hangman
   end
 
   def self.load_game
-    return false unless File.exist?("save.sav")
+    filepath = File.join(__dir__, 'save.sav')
+    return false unless File.exist?(filepath)
 
-    savefile = File.open("save.sav", 'r')
+    savefile = File.open(filepath, 'r')
     hidden_word = savefile.readline.chomp
     letter_guesses = savefile.readline.chomp.split(',')
     wrong_guesses = savefile.readline.chomp.to_i
     puts "#{BLUE}Save file loaded. Save file deleted.#{RESET_COLOR}\n\n"
     letter_guess_feedback('0', letter_guesses, hidden_word, wrong_guesses)
     savefile.close
-    File.delete("save.sav")
+    File.delete(filepath)
     [hidden_word, letter_guesses, wrong_guesses]
   end
 
