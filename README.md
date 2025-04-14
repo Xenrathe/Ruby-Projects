@@ -6,10 +6,11 @@ Each individual project can be accessed from a selector CLI.
 
 Ruby-Projects is active at (replit)
 
-### Project sub-list
+### Binary Search Tree
 
-* Ruby-Connect_Four contains a fully playable (against AI) Connect-Four game
+[Assignment on The Odin Project](https://www.theodinproject.com/lessons/ruby-binary-search-trees)
 
+A balanced Binary Search Tree capable of deletion (both simple and self-balancing), insertion (simple and self-balancing), various traversal, re-balancing, and other functions.
 
 ### Features:
 

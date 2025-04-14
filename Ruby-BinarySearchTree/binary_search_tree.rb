@@ -453,7 +453,90 @@ def test_function
   print "\n"
 end
 
-test_tree = Tree.new([3, 9, 12, 4, 10])
-test_tree.pretty_print
-test_tree.delete(9, false)
-test_tree.pretty_print
+def prompt_build_tree
+  puts "Would you like to build a tree with 'random' or 'manual' input?"
+  print "> "
+  input_type = gets.chomp.strip.downcase
+
+  numbers = []
+
+  case input_type
+  when 'random'
+    puts "How many random numbers should the tree include?"
+    print "> "
+    count = gets.chomp.to_i
+    numbers = Array.new(count) { rand(1..100) }
+    puts "Generated array: #{numbers.inspect}"
+  when 'manual'
+    puts "Enter numbers separated by commas (e.g., 3,5,7,10):"
+    print "> "
+    raw_input = gets.chomp
+    numbers = raw_input.split(',').map(&:strip).map(&:to_i)
+  else
+    puts "Invalid input. Please type 'random' or 'manual'."
+    return prompt_build_tree
+  end
+
+  tree = Tree.new(numbers)
+  puts "\nHere's your tree:"
+  tree.pretty_print
+
+  tree
+end
+
+def tree_menu(tree)
+  loop do
+    puts "\nChoose an action:"
+    puts "1. Insert a value"
+    puts "2. Delete a value"
+    puts "3. Find a value"
+    puts "4. Check balance"
+    puts "5. Print traversals"
+    puts "6. Pretty print tree"
+    puts "7. Rebalance tree"
+    puts "8. Exit"
+    print "> "
+
+    choice = gets.chomp.strip
+
+    case choice
+    when "1"
+      print "Enter value to insert: "
+      val = gets.chomp.to_i
+      tree.insert(val)
+      puts "#{val} inserted."
+    when "2"
+      print "Enter value to delete: "
+      val = gets.chomp.to_i
+      tree.delete(val)
+      puts "#{val} deleted (if it existed)."
+    when "3"
+      print "Enter value to find: "
+      val = gets.chomp.to_i
+      node = tree.find(val)
+      puts node ? "Found node with value #{node.value}" : "Value not found."
+    when "4"
+      puts tree.balanced? ? "Tree is balanced." : "Tree is unbalanced."
+    when "5"
+      puts "Level-order: #{tree.level_order_recursive}"
+      puts "Inorder: #{tree.inorder}"
+      puts "Preorder: #{tree.preorder}"
+      print "Postorder: "
+      tree.postorder { |node| print "#{node.value} -> " }
+      puts
+    when "6"
+      tree.pretty_print
+    when "7"
+      tree.rebalance
+      puts "Tree rebalanced."
+    when "8"
+      puts "Goodbye!"
+      break
+    else
+      puts "Invalid choice."
+    end
+  end
+end
+
+tree = prompt_build_tree
+tree_menu(tree)
