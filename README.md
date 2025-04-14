@@ -24,6 +24,12 @@ A CLI two-player game of Connect Four.
 
 A CLI game of Hangman, demonstrating serialization (loads words from file, can save/load game)
 
+### Linked List
+
+[Assignment on The Odin Project](https://www.theodinproject.com/lessons/ruby-linked-lists)
+
+Implementation of a linear linked list data structure. Includes CLI to play around with the linked list.
+
 ### Features:
 
 - Access to the Core-book SRD data (in the form of JSON data)
