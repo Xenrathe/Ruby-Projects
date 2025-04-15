@@ -3,6 +3,7 @@ require_relative './Ruby-ConnectFour/lib/connect_four_main'
 require_relative './Ruby-Hangman/hangman'
 require_relative './Ruby-KnightsTravails/knights_travails'
 require_relative './Ruby-LinkedList/linked_list'
+require_relative './Ruby-MasterMind/master_mind'
 
 def main_menu
   loop do
@@ -13,7 +14,8 @@ def main_menu
     puts "3. Hangman"
     puts "4. Knights Travails"
     puts "5. Linked List"
-    puts "6. Exit"
+    puts "6. MasterMind"
+    puts "7. Exit"
     print "> "
     choice = gets.chomp.strip
 
@@ -29,6 +31,8 @@ def main_menu
     when "5"
       LinkedListMain.prompt
     when "6"
+      MasterMind.initialize_game
+    when "7"
       puts "See ya!"
       break
     else
