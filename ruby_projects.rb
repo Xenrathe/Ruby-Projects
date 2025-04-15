@@ -40,8 +40,7 @@ def main_menu
       Recursion.prompt
     when "8"
       TicTacToeMain.new_game
-    when "9"
-    when "n"
+    when "9" || "n"
       puts "Have a good day!"
       break
     else
