@@ -1,0 +1,3 @@
+tasks:
+  - init: bundle install || true
+    command: ruby ruby_projects.rb

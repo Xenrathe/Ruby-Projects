@@ -4,7 +4,7 @@
 
 These projects were created as part of The Odin Project (TOP) curriculum. Individual links found under each sub-header. Each individual project can be accessed via CLI when running ruby_projects.rb (e.g. 'ruby ruby_projects.rb' on command line)
 
-Ruby-Projects is active at (replit)
+Ruby-Projects can be run via Gitpod [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Xenrathe/Ruby-Projects/)
 
 ### Binary Search Tree
 
