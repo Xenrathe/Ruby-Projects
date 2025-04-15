@@ -10,13 +10,13 @@ Ruby-Projects is active at (replit)
 
 [Project: Binary Search Trees on TOP](https://www.theodinproject.com/lessons/ruby-binary-search-trees)
 
-A balanced Binary Search Tree capable of deletion (both simple and self-balancing), insertion (simple and self-balancing), various traversal, re-balancing, and other functions.
+A balanced Binary Search Tree capable of deletion (both simple and self-balancing), insertion (simple and self-balancing), various traversals, re-balancing, and other functions.
 
 ### Connect Four
 
 [Project: Connect Four on TOP](https://www.theodinproject.com/lessons/ruby-connect-four)
 
-A CLI two-player game of Connect Four.
+A CLI game of Connect Four, with two human players via Hotseat. Created following TDD.
 
 ### Hangman
 
@@ -47,3 +47,9 @@ A CLI game of MasterMind, played against a perfect/solved AI (good luck!)
 Implementation of two recursive algorithms: Fibonacci sequence and a merge sort
 
 [Project: Recursion on TOP](https://www.theodinproject.com/lessons/ruby-recursion)
+
+### TicTacToe
+
+A CLI game of Tic-Tac-Toe, with two human players via Hotseat. Created following TDD.
+
+[Project: Tic Tac Toe on TOP](https://www.theodinproject.com/lessons/ruby-tic-tac-toe)

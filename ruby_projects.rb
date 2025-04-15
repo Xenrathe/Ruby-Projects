@@ -5,6 +5,7 @@ require_relative './Ruby-KnightsTravails/knights_travails'
 require_relative './Ruby-LinkedList/linked_list'
 require_relative './Ruby-MasterMind/master_mind'
 require_relative './Ruby-Recursive/recursion'
+require_relative './Ruby-TicTacToe/lib/tic_tac_toe_main'
 
 def main_menu
   loop do
@@ -17,7 +18,8 @@ def main_menu
     puts "5. Linked List"
     puts "6. MasterMind"
     puts "7. Recursion"
-    puts "8. Exit"
+    puts "8. Tic-Tac-Toe"
+    puts "9. Exit"
     print "> "
     choice = gets.chomp.strip
 
@@ -37,7 +39,10 @@ def main_menu
     when "7"
       Recursion.prompt
     when "8"
-      puts "See ya!"
+      TicTacToeMain.new_game
+    when "9"
+    when "n"
+      puts "Have a good day!"
       break
     else
       puts "Invalid choice. Try again."
