@@ -4,6 +4,7 @@ require_relative './Ruby-Hangman/hangman'
 require_relative './Ruby-KnightsTravails/knights_travails'
 require_relative './Ruby-LinkedList/linked_list'
 require_relative './Ruby-MasterMind/master_mind'
+require_relative './Ruby-Recursive/recursion'
 
 def main_menu
   loop do
@@ -15,7 +16,8 @@ def main_menu
     puts "4. Knights Travails"
     puts "5. Linked List"
     puts "6. MasterMind"
-    puts "7. Exit"
+    puts "7. Recursion"
+    puts "8. Exit"
     print "> "
     choice = gets.chomp.strip
 
@@ -33,6 +35,8 @@ def main_menu
     when "6"
       MasterMind.initialize_game
     when "7"
+      Recursion.prompt
+    when "8"
       puts "See ya!"
       break
     else
